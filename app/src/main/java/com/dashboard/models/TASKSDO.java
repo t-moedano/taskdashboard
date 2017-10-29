@@ -71,4 +71,10 @@ public class TASKSDO {
         this._uSERSENT = _uSERSENT;
     }
 
+    @Override
+    public String toString() {
+        return "Name:  " + _nAME + " " + "Description: " + _dESCRIPTION + " Status: "
+            + _sTATUS + "User Sent: " + _uSERSENT + "Done by: " + _uSERDONE;
+    }
+
 }

@@ -78,10 +78,6 @@ public class CreateActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-
-                // Item saved
             }
         }).start();
 

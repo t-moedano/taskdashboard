@@ -44,6 +44,7 @@
         android:layout_marginRight="56dp"
         android:layout_marginTop="99dp"
         android:text="View"
+        android:onClick="btnView"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bntDelete" />
 
