@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity
 {
 
     DynamoDBMapper dynamoDBMapper;
+    static String NAME_FOR_TEST = "test";
 
     /**
      * onCreation of this Activity, the dynamo DB Mapper is built.
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity
 
                     TASKSDO newsItem = new TASKSDO();
 
-                    newsItem.setNAME("teste");
+                    newsItem.setNAME(NAME_FOR_TEST);
 
                     Map<String, String> filterExpressionAttributeNames =
                             new HashMap<>();
