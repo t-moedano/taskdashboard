@@ -72,8 +72,7 @@ public class CreateActivity extends AppCompatActivity
     /**
      * When clicking the button to create a new task, get the information of the task from views and create a new item
      * to save in database.
-     * TO DO - fix the name of the colunms (colunm NAME should be the name of the tasks and USER_SENT the user who sent the tasks
-     * but for now the names are changed)
+     * TO DO - fix name of colunms (should not be in uppercase)
      * @param view
      */
     public void btnCreateTask(View view)
