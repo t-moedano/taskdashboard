@@ -21,31 +21,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewActivity extends AppCompatActivity {
+/**
+ * This class shows the information about the tasks created.
+ * TO DO - make the information more readable.
+ */
+public class ViewActivity extends AppCompatActivity
+{
 
 
     static List<TASKSDO> listTasks;
     ListView listTasksView;
 
+    /**
+     * on creation of the activity, a list view is filled with the tasks created.
+     * @param savedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         List<TASKSDO> tasksItem = listTasks;
         listTasks = null;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
 
-                    listTasksView = (ListView) findViewById(R.id.listItems);
+        listTasksView = (ListView) findViewById(R.id.listItems);
 
-                    ArrayAdapter<TASKSDO> adapter = new ArrayAdapter<TASKSDO>(this,
-                            android.R.layout.simple_list_item_1, tasksItem);
+        ArrayAdapter<TASKSDO> adapter = new ArrayAdapter<TASKSDO>(this, android.R.layout.simple_list_item_1, tasksItem);
 
-                    listTasksView.setAdapter(adapter);
-
-
-
-
-                }
+        listTasksView.setAdapter(adapter);
 
     }
+
+}
 

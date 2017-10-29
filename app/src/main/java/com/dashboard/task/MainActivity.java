@@ -21,18 +21,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * This Activity is the main dashboard to control tasks. It's possible to create and view tasks that the user created.
+ * TO DO - Edition/Update of tasks, refactor of DynamoDBMapper
+ */
+public class MainActivity extends AppCompatActivity
+{
 
     DynamoDBMapper dynamoDBMapper;
 
+    /**
+     * onCreation of this Activity, the dynamo DB Mapper is built.
+     * @param savedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-
 
         final Context appContext = getApplicationContext();
 
@@ -49,11 +55,12 @@ public class MainActivity extends AppCompatActivity {
                 .dynamoDBClient(dynamoDBClient)
                 .awsConfiguration(awsConfig)
                 .build();
-
-
-
     }
 
+    /**
+     * When click button to create a new tasks, the activity of creation is started.
+     * @param view
+     */
     public void btnCreate(View view)
     {
         Intent intent = new Intent(this, CreateActivity.class);
@@ -61,20 +68,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * When click button to view tasks, the tasks of the current user are loaded from
+     * database and the activity to show tasks is started.
+     * TO DO - refactor logic to access the database.
+     * @param view
+     */
     public void btnView(View view)
     {
-        new Thread(new Runnable() {
+        new Thread(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
 
-
-                try {
+                try
+                {
 
                     TASKSDO newsItem = new TASKSDO();
 
-
                     newsItem.setNAME("teste");
-
 
                     Map<String, String> filterExpressionAttributeNames =
                             new HashMap<>();
@@ -99,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
                     List<TASKSDO> listTasks = new ArrayList<>();
 
-                    for (int i = 0; i < result.size(); i++) {
+                    for (int i = 0; i < result.size(); i++)
+                    {
                         listTasks.add(result.get(i));
                     }
 
@@ -107,12 +121,12 @@ public class MainActivity extends AppCompatActivity {
                     ViewActivity.listTasks = listTasks;
                     startActivity(intent);
                 }
-                     catch(Exception e)
-                    {
+                catch(Exception e)
+                {
                         e.printStackTrace();
-                    }
                 }
+            }
 
-            }).start();
+        }).start();
     }
 }

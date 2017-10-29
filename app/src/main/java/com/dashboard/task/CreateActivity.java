@@ -19,17 +19,30 @@ import com.dashboard.models.TASKSDO;
 
 import static com.amazonaws.auth.policy.actions.DynamoDBv2Actions.Query;
 
-public class CreateActivity extends AppCompatActivity {
+/**
+ * This activity handles the logic to create a new task.
+ * TO DO - refactor logic of Dynamo DB Mapper
+ */
+public class CreateActivity extends AppCompatActivity
+{
 
     DynamoDBMapper dynamoDBMapper;
 
     String userId = "";
+    static String INITIAL_STATUS  = "processed";
+    static String INITIAL_USER_DONE = "not done";
     EditText taskName;
     EditText descriptionName;
     EditText priorityName;
 
+    /**
+     * When the activity is created, the dynamo db mapper is loaded.
+     * TO DO - refactor this logic since this piece of code is beeing duplicated.
+     * @param savedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
@@ -54,28 +67,38 @@ public class CreateActivity extends AppCompatActivity {
         descriptionName = (EditText) findViewById(R.id.txtDescription);
         priorityName = (EditText) findViewById(R.id.numPriority);
 
-
     }
 
+    /**
+     * When clicking the button to create a new task, get the information of the task from views and create a new item
+     * to save in database.
+     * TO DO - fix the name of the colunms (colunm NAME should be the name of the tasks and USER_SENT the user who sent the tasks
+     * but for now the names are changed)
+     * @param view
+     */
     public void btnCreateTask(View view)
     {
         final TASKSDO taskItem = new TASKSDO();
 
-        // Use IdentityManager to get the user identity id.
         taskItem.setNAME(taskName.getText().toString());
-        taskItem.setUSERDONE("not done");
+        taskItem.setUSERDONE(INITIAL_USER_DONE);
         taskItem.setPRIORITY(priorityName.getText().toString());
         taskItem.setUSERSENT(userId);
-        taskItem.setSTATUS("processed");
+        taskItem.setSTATUS(INITIAL_STATUS);
         taskItem.setDESCRIPTION(descriptionName.getText().toString());
 
 
-        new Thread(new Runnable() {
+        new Thread(new Runnable()
+        {
             @Override
-            public void run() {
-                try  {
+            public void run()
+            {
+                try
+                {
                     dynamoDBMapper.save(taskItem);
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     e.printStackTrace();
                 }
             }

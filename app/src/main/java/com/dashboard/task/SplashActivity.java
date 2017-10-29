@@ -26,29 +26,32 @@ import com.amazonaws.mobile.auth.core.signin.AuthException;
 import com.amazonaws.mobile.auth.ui.AuthUIConfiguration;
 import com.amazonaws.mobile.auth.ui.SignInActivity;
 
+/**
+ * Activity that handle initial sign in / sign up logic. This activity verifies if a user is logged in. Otherwise, it
+ * handles to sign up activity provided by AWS.
+ */
+public class SplashActivity extends AppCompatActivity
+{
 
 
-
-public class SplashActivity extends AppCompatActivity {
-
-
+    /**
+     * onCreate function handles the sign in / sign up logic.
+     * @param savedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        AWSConfiguration awsConfiguration = new AWSConfiguration(getApplicationContext());
-        Context appContext = getApplicationContext();
-        AWSConfiguration awsConfig = new AWSConfiguration(appContext);
-        final IdentityManager identityManager = new IdentityManager(appContext, awsConfig);
+        AWSConfiguration awsConfig = new AWSConfiguration(getApplicationContext());
+        final IdentityManager identityManager = new IdentityManager(getApplicationContext(), awsConfig);
         IdentityManager.setDefaultIdentityManager(identityManager);
-        // If IdentityManager is not created, create it
-
 
         IdentityManager.getDefaultIdentityManager().addSignInProvider(
                 CognitoUserPoolsSignInProvider.class);
 
-        identityManager.doStartupAuth(this,
+        IdentityManager.getDefaultIdentityManager().doStartupAuth(this,
                 new StartupAuthResultHandler() {
                     @Override
                     public void onComplete(final StartupAuthResult authResults) {
@@ -56,32 +59,23 @@ public class SplashActivity extends AppCompatActivity {
                             final IdentityProvider provider =
                                     identityManager.getCurrentIdentityProvider();
 
-                            // If the user was  signed in previously with a provider,
-                            // indicate that to them with a toast.
                             Toast.makeText(
                                     SplashActivity.this, String.format("Signed in with %s",
                                             provider.getDisplayName()), Toast.LENGTH_LONG).show();
                             goMain(SplashActivity.this);
                             return;
 
-                        } else {
-                            // Either the user has never signed in with a provider before
-                            // or refresh failed with a previously signed in provider.
-
-                            // Optionally, you may want to check if refresh
-                            // failed for the previously signed in provider.
+                        }
+                        else
+                        {
 
                             final StartupAuthErrorDetails errors =
                                     authResults.getErrorDetails();
 
-                            if (errors.didErrorOccurRefreshingProvider()) {
+                            if (errors.didErrorOccurRefreshingProvider())
+                            {
                                 final AuthException providerAuthException =
                                         errors.getProviderRefreshException();
-
-                                // Credentials for previously signed-in provider could not be refreshed
-                                // The identity provider name is available here using:
-                                //     providerAuthException.getProvider().getDisplayName()
-
                             }
 
                             doSignIn(IdentityManager.getDefaultIdentityManager());
@@ -93,50 +87,47 @@ public class SplashActivity extends AppCompatActivity {
                 }, 2000);
     }
 
-    private void doSignIn(final IdentityManager identityManager) {
+    /**
+     * This function makes the sign in for an authenticated user.
+     * @param identityManager
+     */
+    public void doSignIn(final IdentityManager identityManager)
+    {
 
         identityManager.setUpToAuthenticate(
-                SplashActivity.this, new DefaultSignInResultHandler() {
+                SplashActivity.this, new DefaultSignInResultHandler()
+                {
 
                     @Override
-                    public void onSuccess(Activity activity, IdentityProvider identityProvider) {
-                        if (identityProvider != null) {
-
-                            // Sign-in succeeded
-                            // The identity provider name is available here using:
-                            //     identityProvider.getDisplayName()
-
-                        }
-
-                        // On Success of SignIn go to your startup activity
+                    public void onSuccess(Activity activity, IdentityProvider identityProvider)
+                    {
                         activity.startActivity(new Intent(activity, MainActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     }
 
                     @Override
-                    public boolean onCancel(Activity activity) {
-                        // Return false to prevent the user from dismissing
-                        // the sign in screen by pressing back button.
-                        // Return true to allow this.
-
+                    public boolean onCancel(Activity activity)
+                    {
                         return false;
                     }
                 });
 
-        AuthUIConfiguration config =
-                new AuthUIConfiguration.Builder()
-                        .userPools(true)
-                        // .signInButton(FacebookButton.class)
-                        // .signInButton(GoogleButton.class)
-                        .build();
+        AuthUIConfiguration config = new AuthUIConfiguration.Builder()
+                                        .userPools(true)
+                                        .build();
 
         Context context = SplashActivity.this;
         SignInActivity.startSignInActivity(context, config);
         SplashActivity.this.finish();
     }
 
-    /** Go to the main activity. */
-    private void goMain(final Activity callingActivity) {
+
+    /**
+     * Goes to main activity that handles tasks.
+     * @param callingActivity
+     */
+    public void goMain(final Activity callingActivity)
+    {
         callingActivity.startActivity(new Intent(callingActivity, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         callingActivity.finish();
